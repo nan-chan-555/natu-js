@@ -728,10 +728,16 @@ iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine {
     margin-bottom: 25px !important;
 }
 
-/* 各コメントのコンテナ */
-.line-chat-box .comments-post {
+/* コメント全体を包む見えない箱 */
+.line-comment-wrapper {
     position: relative !important;
     margin-bottom: 35px !important;
+    display: block !important;
+}
+
+/* 各コメント情報のコンテナ */
+.line-chat-box .comments-post {
+    margin-bottom: 0 !important;
     border-bottom: none !important;
     padding-bottom: 0 !important;
     height: auto !important;
@@ -747,8 +753,9 @@ iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine {
     object-fit: cover !important;
     position: absolute !important;
     display: block !important;
-    top: -46px !important; /* 共通の高さ指定 */
+    top: 0 !important; /* ★常に箱のトップ（しっぽと同じ高さ）に張り付くように変更 */
 }
+
 
 /* システム側の不要な改行タグを非表示 */
 .line-chat-box .comments-post br {
