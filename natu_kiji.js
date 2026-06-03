@@ -118,6 +118,12 @@ if (typeof jQuery !== 'undefined') {
             if ($body.length === 0) return;
 
             var text = $post.text() || "";
+            
+            // 本文と情報を1つの見えない箱で包み、アイコン位置を調整する
+            var $wrapper = $('<div class="line-comment-wrapper"></div>');
+            $body.before($wrapper);
+            $wrapper.append($body).append($post);
+
             // 投稿者名に設定した管理者名が含まれるかでクラスを振り分け
             if (text.indexOf(myAdminName) !== -1) {
                 $body.addClass('line-bubble-admin');
