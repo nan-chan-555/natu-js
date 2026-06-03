@@ -1,0 +1,131 @@
+document.addEventListener("DOMContentLoaded", function() {
+    // ユーザー設定の読み込み
+    const settings = window.natuSettings || {};
+    
+    // --- 1. メニューURLの一括設定 ---
+    for (let id in settings) {
+        if (!id.startsWith('cate')) continue;
+        let url = settings[id];
+        if (!url) continue;
+
+        // ID指定用（互換性維持）
+        let elById = document.getElementById(id);
+        if (elById) elById.href = url;
+        
+        // クラス指定用（メニューなどの複数箇所を一括変更）
+        let classElements = document.querySelectorAll('.set-' + id);
+        classElements.forEach(function(el) {
+            el.href = url;
+        });
+    }
+    
+    // --- 2. ハンバーガーメニューの開閉処理 ---
+    var hamBtn = document.getElementById('hamburger-btn');
+    var clsBtn = document.getElementById('close-btn');
+    var slideMenu = document.getElementById('slide-menu');
+    var menuOverlay = document.getElementById('menu-overlay');
+    if(hamBtn && clsBtn && slideMenu && menuOverlay) {
+        var toggleMenu = function() {
+            slideMenu.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+        };
+        hamBtn.addEventListener('click', toggleMenu);
+        clsBtn.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', toggleMenu);
+    }
+
+    // --- 3. コメント欄の開閉アコーディオン ---
+    var commentBtn = document.getElementById('toggle-comment-btn');
+    var commentBox = document.getElementById('js-comment-accordion-box');
+    if (commentBtn && commentBox) {
+        commentBtn.addEventListener('click', function() {
+            if (commentBox.style.display === 'none') {
+                commentBox.style.display = 'block';
+            } else {
+                commentBox.style.display = 'none';
+            }
+        });
+    }
+});
+
+
+// ==========================================
+// jQuery必須の個別記事専用処理
+// ==========================================
+if (typeof jQuery !== 'undefined') {
+    jQuery(function($) {
+        const settings = window.natuSettings || {};
+        
+        // --- 目次生成 (TOC) ---
+        var idcount = 1;
+        var toc = '';
+        var currentlevel = 0;
+        $("article h2,article h3").each(function() {
+            this.id = "toc-" + idcount;
+            idcount++;
+            var level = (this.nodeName.toLowerCase() == "h2") ? 1 : 2;
+            while (currentlevel < level) { toc += "<ol>"; currentlevel++; }
+            while (currentlevel > level) { toc += "</ol>"; currentlevel--; }
+            toc += '<li><a href="#' + this.id + '">' + $(this).html() + "</a></li>\n";
+        });
+        while (currentlevel > 0) { toc += "</ol>"; currentlevel--; }
+        if ($("article h2")[0]) { $("#toc").html('<div class="mokuji">目次</div>' + toc); }
+
+        // --- はてなブログカード化 ＆ カテゴリータグ付与 ---
+        var isCategoryAdded = false;
+        $('.main').each(function(){
+            var html = $(this).html();
+            // URLのブログカード化
+            html = html.replace(/(<[^>]+>)|(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, function(match, tag, url) {
+                if (tag) return tag;
+                return '<iframe class="hatenablogcard" style="width:100%;height:155px;max-width:680px;" src="https://hatenablog-parts.com/embed?url=' + url + '" frameborder="0" scrolling="no"></iframe>';
+            });
+            
+            // カテゴリータグの自動移動
+            if (settings.hasCategory) {
+                var categoryHtml = '<div class="modern-cat-tag"><span class="cat-label"><i class="fas fa-folder"></i> カテゴリー</span> <a href="' + settings.categoryUrl + '">' + settings.categoryName + '</a></div>';
+                var tagRegex = /タグ[ 　]*[:：]/; 
+                
+                if (tagRegex.test(html)) {
+                    html = html.replace(tagRegex, categoryHtml + '<div class="modern-cat-tag"><span class="cat-label"><i class="fas fa-tags"></i> タグ</span> ');
+                    html += '</div>';
+                    isCategoryAdded = true;
+                }
+            }
+            $(this).html(html);
+        });
+        
+        if (settings.hasCategory && !isCategoryAdded) {
+            $('.main:last').append('<div class="modern-cat-tag"><span class="cat-label"><i class="fas fa-folder"></i> カテゴリー</span> <a href="' + settings.categoryUrl + '">' + settings.categoryName + '</a></div>');
+        }
+
+        // --- 画像のクラス追加 ---
+        $('img').addClass('imgclass');
+
+        // --- 読了時間の算出 ---
+        const MIN_CHAR = 500;
+        var blogText = $('.main').text();
+        var readTime = Math.max(1, Math.floor(blogText.length / MIN_CHAR));
+        $('#read-cnt-area').html('<span style="color: #666; font-size: 13px;"><i class="far fa-clock"></i> この記事は約' + readTime + '分で読めます</span>');
+
+        // --- LINE風コメント欄の管理者振り分け ---
+        var myAdminName = settings.adminName || "管理者"; 
+        var $bodies = $('.line-chat-box .comments-body');
+        
+        $('.line-chat-box .comments-post').each(function(index) {
+            var $post = $(this);
+            var $body = $bodies.eq(index); 
+            if ($body.length === 0) return;
+
+            var text = $post.text() || "";
+            // 投稿者名に設定した管理者名が含まれるかでクラスを振り分け
+            if (text.indexOf(myAdminName) !== -1) {
+                $body.addClass('line-bubble-admin');
+                $post.addClass('line-meta-admin');
+            } else {
+                $body.addClass('line-bubble-user');
+                $post.addClass('line-meta-user');
+            }
+        });
+    });
+}
