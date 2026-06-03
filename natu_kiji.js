@@ -133,9 +133,6 @@ if (typeof jQuery !== 'undefined') {
                 $post.addClass('line-meta-user');
             }
         });
-    });
-}
-
 
         // --- 記事内 吹き出し自動生成スクリプト ---
         // ナチュログ側で設定されていなければ、デフォルトの空値を入れる
