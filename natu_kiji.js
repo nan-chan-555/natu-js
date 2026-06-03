@@ -135,3 +135,33 @@ if (typeof jQuery !== 'undefined') {
         });
     });
 }
+
+
+        // --- 記事内 吹き出し自動生成スクリプト ---
+        // ナチュログ側で設定されていなければ、デフォルトの空値を入れる
+        var personA = settings.personA || { name: "Aさん", img: "" };
+        var personB = settings.personB || { name: "Bさん", img: "" };
+
+        // class="chat-a" をAさん（左）の吹き出しに自動変換
+        $('.chat-a').each(function() {
+            var text = $(this).html();
+            $(this).replaceWith(
+                '<div class="balloon-box">' +
+                    '<div class="balloon-icon"><img src="' + personA.img + '" alt=""><p>' + personA.name + '</p></div>' +
+                    '<div class="balloon-text">' + text + '</div>' +
+                '</div>'
+            );
+        });
+
+        // class="chat-b" をBさん（右）の吹き出しに自動変換
+        $('.chat-b').each(function() {
+            var text = $(this).html();
+            $(this).replaceWith(
+                '<div class="balloon-box is-right">' +
+                    '<div class="balloon-icon"><img src="' + personB.img + '" alt=""><p>' + personB.name + '</p></div>' +
+                    '<div class="balloon-text">' + text + '</div>' +
+                '</div>'
+            );
+        });
+    });
+}
