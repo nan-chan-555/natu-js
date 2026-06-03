@@ -867,3 +867,60 @@ iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine {
     text-align: left !important;
     padding-left: 50px !important;
 }
+
+
+/* =========================================
+   記事内 会話型吹き出し機能（自動生成用）
+========================================= */
+.balloon-box {
+    margin: 20px 0;
+    display: flex;
+    align-items: flex-start;
+}
+.balloon-icon {
+    width: 60px;
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+    flex-shrink: 0;
+}
+.balloon-icon img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
+.balloon-text {
+    position: relative;
+    background: #fff;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin-left: 15px;
+    max-width: 70%;
+    color: #333;
+}
+.balloon-text::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 15px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #ccc;
+}
+.balloon-box.is-right {
+    flex-direction: row-reverse;
+}
+.balloon-box.is-right .balloon-text {
+    margin-left: 0;
+    margin-right: 15px;
+    border-color: #7494c0; /* Bさんの枠線の色 */
+}
+.balloon-box.is-right .balloon-text::before {
+    left: auto;
+    right: -10px;
+    border-right: none;
+    border-left: 10px solid #7494c0;
+}
