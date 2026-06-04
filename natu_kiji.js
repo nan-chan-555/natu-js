@@ -8,11 +8,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let url = settings[id];
         if (!url) continue;
 
-        // ID指定用（互換性維持）
         let elById = document.getElementById(id);
         if (elById) elById.href = url;
         
-        // クラス指定用（メニューなどの複数箇所を一括変更）
         let classElements = document.querySelectorAll('.set-' + id);
         classElements.forEach(function(el) {
             el.href = url;
@@ -160,5 +158,11 @@ if (typeof jQuery !== 'undefined') {
                 '</div>'
             );
         });
+
+        // --- ★最終処理：目次の配置最適化（最初のH2の直前へ移動） ---
+        // ※他のすべての処理が終わった安全な状態で移動させます
+        if ($("article h2").length > 0 && $("#toc").length > 0) {
+            $("article h2").first().before($("#toc"));
+        }
     });
 }
