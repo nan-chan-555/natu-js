@@ -145,17 +145,16 @@ if (typeof jQuery !== 'undefined') {
             );
         });
 
-        // --- 6. ★最終処理：目次の生成と配置の最適化 ---
-        // ※すべてのHTML操作が終わった、一番安全な最後のタイミングで実行します
+        // --- 6. ★最終処理：目次生成と最初の見出し上への移動 ---
         var idcount = 1;
         var toc = '';
         var currentlevel = 0;
         
-        // 記事内の見出し(H2, H3)を取得
-        var $headings = $("article h2, article h3");
+        // 記事内のすべての見出し（大文字小文字・タグ内のスペース不問）を取得
+        var $allHeadings = $("article").find("h2, h3, H2, H3");
         
-        if ($headings.length > 0) {
-            $headings.each(function() {
+        if ($allHeadings.length > 0) {
+            $allHeadings.each(function() {
                 this.id = "toc-" + idcount;
                 idcount++;
                 var level = (this.nodeName.toLowerCase() == "h2") ? 1 : 2;
@@ -165,16 +164,12 @@ if (typeof jQuery !== 'undefined') {
             });
             while (currentlevel > 0) { toc += "</ol>"; currentlevel--; }
             
-            // 1. 一番上にある不要な「空の目次箱」を完全に消去
-            $("#toc").remove();
-            
-            // 2. 最初のH2の直前に、完成した目次を直接新設する
-            var completeTocHtml = '<div id="toc"><div class="mokuji">目次</div>' + toc + '</div>';
-            $("article h2").first().before(completeTocHtml);
-            
-        } else {
-            // 万が一、記事内に見出しが1つもない場合は、一番上の空箱を消して余白を消す
-            $("#toc").remove();
+            // HTMLに最初からある #toc を見つけ、中身を書き換えて最初の見出しの直前に移動
+            var $tocTarget = $("#toc");
+            if ($tocTarget.length > 0) {
+                $tocTarget.html('<div class="mokuji">目次</div>' + toc);
+                $allHeadings.first().before($tocTarget);
+            }
         }
     });
 }
