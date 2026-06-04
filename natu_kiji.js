@@ -56,7 +56,7 @@ if (typeof jQuery !== 'undefined') {
     jQuery(function($) {
         const settings = window.natuSettings || {};
         
-        // --- 目次生成 (TOC) ＆ 配置の最適化 ---
+        // --- 目次生成 (TOC) ---
         var idcount = 1;
         var toc = '';
         var currentlevel = 0;
@@ -69,19 +69,7 @@ if (typeof jQuery !== 'undefined') {
             toc += '<li><a href="#' + this.id + '">' + $(this).html() + "</a></li>\n";
         });
         while (currentlevel > 0) { toc += "</ol>"; currentlevel--; }
-        
-        // 記事内にH2（見出し）が存在する場合のみ処理を実行
-        if ($("article h2")[0]) { 
-            var $tocBox = $("#toc");
-            if ($tocBox.length) {
-                // HTML側に固定されている#tocを、最初のH2の直前へ動的に移動させる
-                $("article h2").first().before($tocBox);
-                $tocBox.html('<div class="mokuji">目次</div>' + toc);
-            } else {
-                // 万が一HTML側に#tocがない場合は、新しく作って最初のH2の直前に挿入する
-                $("article h2").first().before('<div id="toc"><div class="mokuji">目次</div>' + toc + '</div>');
-            }
-        }
+        if ($("article h2")[0]) { $("#toc").html('<div class="mokuji">目次</div>' + toc); }
 
         // --- はてなブログカード化 ＆ カテゴリータグ付与 ---
         var isCategoryAdded = false;
@@ -147,6 +135,7 @@ if (typeof jQuery !== 'undefined') {
         });
 
         // --- 記事内 吹き出し自動生成スクリプト ---
+        // ナチュログ側で設定されていなければ、デフォルトの空値を入れる
         var personA = settings.personA || { name: "Aさん", img: "" };
         var personB = settings.personB || { name: "Bさん", img: "" };
 
