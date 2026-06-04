@@ -8,9 +8,11 @@ document.addEventListener("DOMContentLoaded", function() {
         let url = settings[id];
         if (!url) continue;
 
+        // ID指定用（互換性維持）
         let elById = document.getElementById(id);
         if (elById) elById.href = url;
         
+        // クラス指定用（メニューなどの複数箇所を一括変更）
         let classElements = document.querySelectorAll('.set-' + id);
         classElements.forEach(function(el) {
             el.href = url;
@@ -54,11 +56,12 @@ if (typeof jQuery !== 'undefined') {
     jQuery(function($) {
         const settings = window.natuSettings || {};
         
-        // --- 目次生成 (TOC) ---
+        // --- 目次生成 (TOC) のデータ準備 ---
         var idcount = 1;
         var toc = '';
         var currentlevel = 0;
-        $("article h2,article h3").each(function() {
+        // 本文エリア(.main)の中の見出しを確実にスキャンします
+        $(".main h2, .main h3").each(function() {
             this.id = "toc-" + idcount;
             idcount++;
             var level = (this.nodeName.toLowerCase() == "h2") ? 1 : 2;
@@ -67,7 +70,6 @@ if (typeof jQuery !== 'undefined') {
             toc += '<li><a href="#' + this.id + '">' + $(this).html() + "</a></li>\n";
         });
         while (currentlevel > 0) { toc += "</ol>"; currentlevel--; }
-        if ($("article h2")[0]) { $("#toc").html('<div class="mokuji">目次</div>' + toc); }
 
         // --- はてなブログカード化 ＆ カテゴリータグ付与 ---
         var isCategoryAdded = false;
@@ -133,7 +135,6 @@ if (typeof jQuery !== 'undefined') {
         });
 
         // --- 記事内 吹き出し自動生成スクリプト ---
-        // ナチュログ側で設定されていなければ、デフォルトの空値を入れる
         var personA = settings.personA || { name: "Aさん", img: "" };
         var personB = settings.personB || { name: "Bさん", img: "" };
 
@@ -159,10 +160,17 @@ if (typeof jQuery !== 'undefined') {
             );
         });
 
-        // --- ★最終処理：目次の配置最適化（最初のH2の直前へ移動） ---
-        // ※他のすべての処理が終わった安全な状態で移動させます
-        if ($("article h2").length > 0 && $("#toc").length > 0) {
-            $("article h2").first().before($("#toc"));
+        // --- ★最終処理：目次の生成と配置の最適化 ---
+        if ($(".main h2").length > 0) {
+            // 1. 元の場所にある空の#tocを完全に削除（消去）
+            $("#toc").remove();
+            
+            // 2. 最初のH2の直前に、中身の入った目次を新しく作成して直接挿入（新設）
+            var completeTocHtml = '<div id="toc"><div class="mokuji">目次</div>' + toc + '</div>';
+            $(".main h2").first().before(completeTocHtml);
+        } else {
+            // 万が一、記事内にH2見出しが1つもない場合は、元の位置にそのまま表示
+            $("#toc").html('<div class="mokuji">目次</div>' + toc);
         }
     });
 }
