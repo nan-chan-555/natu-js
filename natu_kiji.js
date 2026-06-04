@@ -55,23 +55,8 @@ document.addEventListener("DOMContentLoaded", function() {
 if (typeof jQuery !== 'undefined') {
     jQuery(function($) {
         const settings = window.natuSettings || {};
-        
-        // --- 目次生成 (TOC) のデータ準備 ---
-        var idcount = 1;
-        var toc = '';
-        var currentlevel = 0;
-        // 本文エリア(.main)の中の見出しを確実にスキャンします
-        $(".main h2, .main h3").each(function() {
-            this.id = "toc-" + idcount;
-            idcount++;
-            var level = (this.nodeName.toLowerCase() == "h2") ? 1 : 2;
-            while (currentlevel < level) { toc += "<ol>"; currentlevel++; }
-            while (currentlevel > level) { toc += "</ol>"; currentlevel--; }
-            toc += '<li><a href="#' + this.id + '">' + $(this).html() + "</a></li>\n";
-        });
-        while (currentlevel > 0) { toc += "</ol>"; currentlevel--; }
 
-        // --- はてなブログカード化 ＆ カテゴリータグ付与 ---
+        // --- 1. はてなブログカード化 ＆ カテゴリータグ付与 ---
         var isCategoryAdded = false;
         $('.main').each(function(){
             var html = $(this).html();
@@ -99,16 +84,16 @@ if (typeof jQuery !== 'undefined') {
             $('.main:last').append('<div class="modern-cat-tag"><span class="cat-label"><i class="fas fa-folder"></i> カテゴリー</span> <a href="' + settings.categoryUrl + '">' + settings.categoryName + '</a></div>');
         }
 
-        // --- 画像のクラス追加 ---
+        // --- 2. 画像のクラス追加 ---
         $('img').addClass('imgclass');
 
-        // --- 読了時間の算出 ---
+        // --- 3. 読了時間の算出 ---
         const MIN_CHAR = 500;
         var blogText = $('.main').text();
         var readTime = Math.max(1, Math.floor(blogText.length / MIN_CHAR));
         $('#read-cnt-area').html('<span style="color: #666; font-size: 13px;"><i class="far fa-clock"></i> この記事は約' + readTime + '分で読めます</span>');
 
-        // --- LINE風コメント欄の管理者振り分け ---
+        // --- 4. LINE風コメント欄の管理者振り分け ---
         var myAdminName = settings.adminName || "管理者"; 
         var $bodies = $('.line-chat-box .comments-body');
         
@@ -134,7 +119,7 @@ if (typeof jQuery !== 'undefined') {
             }
         });
 
-        // --- 記事内 吹き出し自動生成スクリプト ---
+        // --- 5. 記事内 吹き出し自動生成スクリプト ---
         var personA = settings.personA || { name: "Aさん", img: "" };
         var personB = settings.personB || { name: "Bさん", img: "" };
 
@@ -160,17 +145,36 @@ if (typeof jQuery !== 'undefined') {
             );
         });
 
-        // --- ★最終処理：目次の生成と配置の最適化 ---
-        if ($(".main h2").length > 0) {
-            // 1. 元の場所にある空の#tocを完全に削除（消去）
+        // --- 6. ★最終処理：目次の生成と配置の最適化 ---
+        // ※すべてのHTML操作が終わった、一番安全な最後のタイミングで実行します
+        var idcount = 1;
+        var toc = '';
+        var currentlevel = 0;
+        
+        // 記事内の見出し(H2, H3)を取得
+        var $headings = $("article h2, article h3");
+        
+        if ($headings.length > 0) {
+            $headings.each(function() {
+                this.id = "toc-" + idcount;
+                idcount++;
+                var level = (this.nodeName.toLowerCase() == "h2") ? 1 : 2;
+                while (currentlevel < level) { toc += "<ol>"; currentlevel++; }
+                while (currentlevel > level) { toc += "</ol>"; currentlevel--; }
+                toc += '<li><a href="#' + this.id + '">' + $(this).html() + "</a></li>\n";
+            });
+            while (currentlevel > 0) { toc += "</ol>"; currentlevel--; }
+            
+            // 1. 一番上にある不要な「空の目次箱」を完全に消去
             $("#toc").remove();
             
-            // 2. 最初のH2の直前に、中身の入った目次を新しく作成して直接挿入（新設）
+            // 2. 最初のH2の直前に、完成した目次を直接新設する
             var completeTocHtml = '<div id="toc"><div class="mokuji">目次</div>' + toc + '</div>';
-            $(".main h2").first().before(completeTocHtml);
+            $("article h2").first().before(completeTocHtml);
+            
         } else {
-            // 万が一、記事内にH2見出しが1つもない場合は、元の位置にそのまま表示
-            $("#toc").html('<div class="mokuji">目次</div>' + toc);
+            // 万が一、記事内に見出しが1つもない場合は、一番上の空箱を消して余白を消す
+            $("#toc").remove();
         }
     });
 }
