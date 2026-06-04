@@ -50,30 +50,55 @@ if (typeof jQuery !== 'undefined') {
     jQuery(function($) {
         const settings = window.natuSettings || {};
         
-        // --- 1. 目次生成 (TOC) ---
+        // --- 1. 目次データの生成（移動はせず、データだけ作る） ---
         var idcount = 1;
-        var toc = '';
+        var tocList = '';
         var currentlevel = 0;
-        $("article h2,article h3").each(function() {
+        
+        // H2とH3にIDを付与しながらリストを作成
+        $("article h2, article h3").each(function() {
             this.id = "toc-" + idcount;
             idcount++;
             var level = (this.nodeName.toLowerCase() == "h2") ? 1 : 2;
-            while (currentlevel < level) { toc += "<ol>"; currentlevel++; }
-            while (currentlevel > level) { toc += "</ol>"; currentlevel--; }
-            toc += '<li><a href="#' + this.id + '">' + $(this).html() + "</a></li>\n";
+            while (currentlevel < level) { tocList += "<ol>"; currentlevel++; }
+            while (currentlevel > level) { tocList += "</ol>"; currentlevel--; }
+            tocList += '<li><a href="#' + this.id + '">' + $(this).html() + "</a></li>\n";
         });
-        while (currentlevel > 0) { toc += "</ol>"; currentlevel--; }
-        if ($("article h2")[0]) { $("#toc").html('<div class="mokuji">目次</div>' + toc); }
+        while (currentlevel > 0) { tocList += "</ol>"; currentlevel--; }
 
-        // --- 2. はてなブログカード化 ＆ カテゴリータグ付与 ---
+        // 目次のHTMLブロックを準備
+        var tocHtml = '';
+        if (tocList !== '') {
+            tocHtml = '<div id="toc"><div class="mokuji">目次</div>' + tocList + '</div>';
+        }
+        
+        // テンプレートの一番上にある「元々の空の目次箱」を完全に消去する
+        $("#toc").remove();
+
+        // --- 2. はてなブログカード化 ＆ カテゴリータグ付与 ＆ ★目次の直接埋め込み ---
+        var isTocInserted = false;
         var isCategoryAdded = false;
+
         $('.main').each(function(){
             var html = $(this).html();
+            
+            // ブログカード化
             html = html.replace(/(<[^>]+>)|(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, function(match, tag, url) {
                 if (tag) return tag;
                 return '<iframe class="hatenablogcard" style="width:100%;height:155px;max-width:680px;" src="https://hatenablog-parts.com/embed?url=' + url + '" frameborder="0" scrolling="no"></iframe>';
             });
             
+            // ★最強の目次挿入ロジック：HTML文字列の中で最初のH2を探し、その直前に目次をねじ込む
+            if (tocHtml !== '' && !isTocInserted) {
+                // H2タグ（属性付き・大文字小文字問わず）があるかチェック
+                if (/(<h2[^>]*>)/i.test(html)) {
+                    // 最初のH2の直前に目次のHTMLを挿入
+                    html = html.replace(/(<h2[^>]*>)/i, "\n" + tocHtml + "\n$1");
+                    isTocInserted = true;
+                }
+            }
+            
+            // カテゴリータグ処理
             if (settings.hasCategory) {
                 var categoryHtml = '<div class="modern-cat-tag"><span class="cat-label"><i class="fas fa-folder"></i> カテゴリー</span> <a href="' + settings.categoryUrl + '">' + settings.categoryName + '</a></div>';
                 var tagRegex = /タグ[ 　]*[:：]/; 
@@ -83,6 +108,8 @@ if (typeof jQuery !== 'undefined') {
                     isCategoryAdded = true;
                 }
             }
+            
+            // 書き換えたHTMLを画面に戻す
             $(this).html(html);
         });
         
@@ -135,19 +162,5 @@ if (typeof jQuery !== 'undefined') {
             var text = $(this).html();
             $(this).replaceWith('<div class="balloon-box is-right"><div class="balloon-icon"><img src="' + personB.img + '" alt=""><p>' + personB.name + '</p></div><div class="balloon-text">' + text + '</div></div>');
         });
-
-        // --- ★7. 最終処理：目次のコピーと移動（クローン方式） ---
-        var $firstH2 = $("article h2").first();
-        var $originalToc = $("#toc");
-        
-        // 最初のH2が存在し、かつ目次が正しく生成されている場合のみ実行
-        if ($firstH2.length > 0 && $originalToc.length > 0 && $originalToc.html().indexOf('<li>') !== -1) {
-            // 目次を丸ごとコピーする（クローン）
-            var $clone = $originalToc.clone();
-            // コピーした目次をH2の直前に挿入する
-            $firstH2.before($clone);
-            // 元の目次はCSSの競合を防ぐためIDを変えて非表示にする
-            $originalToc.attr('id', 'toc-old').hide();
-        }
     });
 }
