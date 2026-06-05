@@ -343,7 +343,7 @@ h2 {
 /* サイトトップ設定 */
 #top { background-repeat: no-repeat; background-position: center top; }
 #header_top {
-    height: 250px; max-width: 1000px; margin: 0 auto; position: relative; background-image: url("//admin.naturum.ne.jp/_img/lab_original/title_images/bg_N3.jpg"); background-repeat: no-repeat; background-position: center top; background-size: 100%;
+    height: 250px; max-width: 1000px; margin: 0 auto; position: relative; background-image: url("https://img01.naturum.ne.jp/usr/i/e/c/iecamp/トップ画像.JPG"); background-repeat: no-repeat; background-position: center top; background-size: 100%;
 }
 #header_top_d { height: 200px; max-width: 1000px; margin: 0 auto; position: relative; }
 #middle { display: flex; max-width: 1000px; margin: 0 auto; overflow: hidden; }
