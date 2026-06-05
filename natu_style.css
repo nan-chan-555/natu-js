@@ -346,10 +346,8 @@ h2 {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
-    position: relative;
-    
-    /* ▼ 画像のURL ▼ */
-    background-image: url("https://img01.naturum.ne.jp/usr/i/e/c/iecamp/トップ画像.JPG");
+    position: relative;
+    background-image: none;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
