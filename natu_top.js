@@ -2,6 +2,15 @@ document.addEventListener("DOMContentLoaded", function() {
     // ユーザー設定の取得（設定がない場合の安全対策含む）
     const categories = window.natuSettings || {};
     
+    // --- トップ画像URLの自動設定 ---
+    if (settings.topImage) {
+        var headerTop = document.getElementById('header_top');
+        if (headerTop) {
+            // CSSの background-image を動的に書き換える
+            headerTop.style.backgroundImage = 'url("' + settings.topImage + '")';
+        }
+    }
+
     // cate1 〜 cate4 までをループ処理
     for (let id in categories) {
         let url = categories[id];
