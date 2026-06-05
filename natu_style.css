@@ -343,9 +343,32 @@ h2 {
 /* サイトトップ設定 */
 #top { background-repeat: no-repeat; background-position: center top; }
 #header_top {
-    height: 250px; max-width: 1000px; margin: 0 auto; position: relative; background-image: url("https://img01.naturum.ne.jp/usr/i/e/c/iecamp/トップ画像.JPG"); background-repeat: no-repeat; background-position: center top; background-size: 100%;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    
+    /* ▼ 画像のURL ▼ */
+    background-image: url("https://img01.naturum.ne.jp/usr/i/e/c/iecamp/トップ画像.JPG");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    
+    /* PC・スマホ両対応の「可変する高さ」設定 */
+    height: 30vw; /* 画面幅の30%の高さにする */
+    min-height: 180px; /* スマホでの最低の高さ */
+    max-height: 350px; /* PCでの最大の高さ */
 }
-#header_top_d { height: 200px; max-width: 1000px; margin: 0 auto; position: relative; }
+
+/* ヘッダー内部のコンテナ（文字などを包む要素） */
+#header_top_d {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    
+    /* ★重要：固定の 200px を廃止し、親（画像）の高さに100%自動で合わせる */
+    height: 100% !important; 
+}
 #middle { display: flex; max-width: 1000px; margin: 0 auto; overflow: hidden; }
 #top_ap1 { position: absolute; width: 184px; height: 72px; z-index: 1; left: 7px; top: 7px; }
 #navi {
