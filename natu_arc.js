@@ -2,6 +2,15 @@ document.addEventListener("DOMContentLoaded", function() {
     // ユーザー設定の読み込み
     const settings = window.natuSettings || {};
     
+    // --- トップ画像URLの自動設定 ---
+    if (settings.topImage) {
+        var headerTop = document.getElementById('header_top');
+        if (headerTop) {
+            // CSSの background-image を動的に書き換える
+            headerTop.style.backgroundImage = 'url("' + settings.topImage + '")';
+        }
+    }
+
     // --- 1. メニューURLの一括設定 ---
     for (let id in settings) {
         if (!id.startsWith('cate')) continue;
