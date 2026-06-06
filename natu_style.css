@@ -12,12 +12,20 @@ body {
     background-position: center top;
     margin: 29px 0 0 0;
     min-width: 300px;
-    letter-spacing: 0.05em;
-    line-height: 1.8; /* 行間を広げて読みやすく */
 }
 #wrap { background-color: transparent; } /* 全体背景を透明に */
 img { border: none; max-width: 100%; height: auto; }
 form { margin: 0; padding: 0; }
+
+/* 記事本文にだけ行間と文字間隔を適用（システムバーへの影響防止） */
+.main {
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+    font-size: 16px;
+    word-wrap: break-word;
+    word-break: break-all;
+    margin: 20px 0 5px 0;
+}
 
 /* =========================================
    配布用カラー設定（ここを変えるだけで全体の雰囲気が変わります）
@@ -208,54 +216,25 @@ article h3 {
 }
 
 /* =========================================
-   目次（TOC）デザイン（STORK/JIN風）
+   記事ページ 各種スタイル（パンくず・目次）
 ========================================= */
+/* パンくずメニュー（★復元しました） */
+.breadcrumb { font-size: 12px; padding: 0; list-style: none; border-bottom: solid 1px #ddd; margin-bottom: 20px; }
+.breadcrumb li { display: inline; list-style: none; font-weight: bold; }
+.breadcrumb li:after { content: '>'; padding: 0 0.2em; color: #555; }
+.breadcrumb li:last-child:after { content: ''; }
+.breadcrumb li a { text-decoration: none; color: var(--accent-color); }
+.breadcrumb li a:hover { text-decoration: underline; }
+
+/* 目次（TOC） */
 #toc {
-    background: var(--base-white);
-    border: 1px solid #f0f0f0;
-    border-radius: var(--radius-m);
-    box-shadow: var(--card-shadow);
-    margin: 30px auto;
-    padding: 25px;
-    max-width: 90%;
-    position: relative;
-    text-align: left !important;
+    background: var(--base-white); border: 1px solid #f0f0f0; border-radius: var(--radius-m); box-shadow: var(--card-shadow); margin: 30px auto; padding: 25px; max-width: 90%; position: relative; text-align: left !important;
 }
-.mokuji {
-    font-size: 1.1em;
-    font-weight: 700;
-    color: var(--accent-color);
-    text-align: center;
-    border-bottom: 2px solid var(--accent-color_light);
-    padding-bottom: 15px;
-    margin-bottom: 20px;
-    letter-spacing: 0.1em;
-}
+.mokuji { font-size: 1.1em; font-weight: 700; color: var(--accent-color); text-align: center; border-bottom: 2px solid var(--accent-color_light); padding-bottom: 15px; margin-bottom: 20px; letter-spacing: 0.1em; }
 #toc ol { margin: 0; padding: 0 10px; list-style: none !important; counter-reset: toc-count; }
-#toc ol li {
-    font-size: 14px;
-    margin-bottom: 12px;
-    list-style: none !important;
-    position: relative;
-    padding-left: 28px;
-    border-bottom: none !important;
-}
+#toc ol li { font-size: 14px; margin-bottom: 12px; list-style: none !important; position: relative; padding-left: 28px; border-bottom: none !important; }
 #toc ol li::before {
-    counter-increment: toc-count;
-    content: counter(toc-count);
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    background-color: var(--accent-color);
-    color: #fff;
-    border-radius: 50%;
-    font-size: 11px;
-    font-weight: 700;
-    text-align: center;
-    line-height: 20px;
+    counter-increment: toc-count; content: counter(toc-count); position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; background-color: var(--accent-color); color: #fff; border-radius: 50%; font-size: 11px; font-weight: 700; text-align: center; line-height: 20px;
 }
 #toc ol a { text-decoration: none; color: var(--text-color); transition: all 0.3s ease; }
 #toc ol a:hover { color: var(--accent-color); text-decoration: underline; }
@@ -263,68 +242,26 @@ article h3 {
 #toc ol > ol li { font-size: 0.95em; }
 
 /* =========================================
-   SNS共有ボタンデザイン（プロ仕様・JIN風バルーン）
+   SNS共有ボタンデザイン
 ========================================= */
-.social-btn {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    list-style: none;
-    margin: 2em 0;
-    padding: 0;
-    gap: 8px; /* ボタン同士の隙間 */
-}
-.social-btn li {
-    flex: 1; /* 均等幅 */
-    max-width: calc(20% - 7px);
-    height: auto !important;
-    min-width: 80px;
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none !important;
-}
-.social-btn a {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    text-decoration: none !important;
-    border-radius: var(--radius-m); /* 角丸バルーン */
-    padding: 10px 0;
-    font-size: 18px; /* アイコンサイズ */
-    transition: all 0.3s var(--ease-out);
-    box-sizing: border-box;
-}
-/* アイコンの下にテキストを追加（万人受け・プロ仕様） */
-.social-btn a::after {
-    font-family: var(--font-family);
-    font-size: clamp(10px, 1.5vw, 12px);
-    font-weight: 700;
-    margin-top: 4px;
-}
+.social-btn { display: flex; justify-content: center; flex-wrap: wrap; list-style: none; margin: 2em 0; padding: 0; gap: 8px; }
+.social-btn li { flex: 1; max-width: calc(20% - 7px); height: auto !important; min-width: 80px; margin: 0 !important; padding: 0 !important; list-style: none !important; }
+.social-btn a { display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-decoration: none !important; border-radius: var(--radius-m); padding: 10px 0; font-size: 18px; transition: all 0.3s var(--ease-out); box-sizing: border-box; }
+.social-btn a::after { font-family: var(--font-family); font-size: clamp(10px, 1.5vw, 12px); font-weight: 700; margin-top: 4px; }
 .social-btn .social-btn_x a::after { content: "ポスト"; }
 .social-btn .social-btn_facebook a::after { content: "シェア"; }
 .social-btn .social-btn_hatena a::after { content: "はてブ"; font-size: 10px; }
 .social-btn .social-btn_pocket a::after { content: "保存"; }
 .social-btn .social-btn_line a::after { content: "LINE"; }
-
-/* 各ブランドカラー（公式色）万人受けする明るさに微調整 */
 .social-btn .social-btn_x a { background-color: #333; }
 .social-btn .social-btn_facebook a { background-color: #3b5998; }
 .social-btn .social-btn_hatena a { background-color: #00a4de; }
 .social-btn .social-btn_pocket a { background-color: #ef4056; }
 .social-btn .social-btn_line a { background-color: #06C755; }
-
-/* ホバーアクション */
-.social-btn li a:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--card-shadow);
-    opacity: 0.9;
-}
+.social-btn li a:hover { transform: translateY(-3px); box-shadow: var(--card-shadow); opacity: 0.9; }
 
 /* =========================================
-   サイトトップ・ヘッダー・ピックアップ設定（前回維持）
+   サイトトップ・ヘッダー・ピックアップ設定
 ========================================= */
 #top { background-repeat: no-repeat; background-position: center top; }
 #header_top {
@@ -333,7 +270,7 @@ article h3 {
 }
 #header_top_d { max-width: 1000px; margin: 0 auto; position: relative; height: 100% !important; }
 
-/* タイトル・説明文（多重影・自動サイズ） */
+/* タイトル・説明文 */
 .blogtitle { margin: 0; padding: 0 15px; }
 .blogtitle a {
     font-family: "Helvetica Neue", Arial, sans-serif; color: #ffffff; font-weight: 700; font-size: clamp(24px, 5vw, 42px); letter-spacing: 0.1em; text-decoration: none;
@@ -341,7 +278,7 @@ article h3 {
 }
 #description { font-family: "Helvetica Neue", Arial, sans-serif; color: #f8f9fa; font-weight: normal; font-size: clamp(12px, 2vw, 16px); margin-top: 10px; padding: 0 20px; line-height: 1.6; letter-spacing: 0.05em; text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.8); }
 
-/* ピックアップメニュー（プロ仕様・JIN/STORK風） */
+/* ピックアップメニュー */
 .content-top { background: transparent; padding: 10px 0; }
 .pickup-wrap { display: flex; flex-wrap: wrap; justify-content: space-between; max-width: 1000px; width: 96%; margin: 25px auto; padding: 0; gap: 15px; }
 .pickup-item { display: flex; flex-direction: column; justify-content: center; align-items: center; width: calc(25% - 12px); background: var(--base-white); border-radius: 12px; padding: 25px 10px; box-shadow: var(--card-shadow); border: 1px solid #f0f0f0; text-decoration: none !important; box-sizing: border-box; transition: all 0.3s var(--ease-out); }
@@ -349,87 +286,29 @@ article h3 {
 .pickup-item i { font-size: 32px; color: var(--accent-color); margin-bottom: 12px; transition: transform 0.3s ease; }
 .pickup-item:hover i { transform: scale(1.1); }
 .pickup-title { font-size: 14px; font-weight: 700; color: #333; letter-spacing: 0.05em; text-align: center; line-height: 1.3; border: none; background: transparent; padding: 0; position: static; transform: none; width: auto; white-space: normal;}
-.pickup-item:after { display: none; } /* 古い枠線消去 */
+.pickup-item:after { display: none; }
 
 /* 画像全体クリック可能設定 */
 .blogtitle a::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
 
 /* =========================================
-   汎用装飾・モダンUI設定（四角さをリセット）
+   汎用装飾・モダンUI設定
 ========================================= */
-/* コンテンツラップ枠（影と四角さをリセット） */
-#wrap_content, #content2 {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 10px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
-}
-#wrap_content:before, #wrap_content:after { display: none !important; } /* 古い本の装飾消去 */
-
-/* 各種リセット */
-.link_banner, # Wraplinks, # підтрим flow1, flow2, flow3, flow4 { display: none !important; } /* 配布時に不要な固有リンク */
-
-/* 引用（blockquote）万人受け・プロ仕様 */
-blockquote {
-    position: relative;
-    background: transparent;
-    border: none;
-    border-left: 4px solid var(--accent-color_light);
-    border-radius: var(--radius-s);
-    box-shadow: none;
-    font-size: 15px;
-    margin: 20px 40px;
-    padding: 15px 20px;
-    color: #666;
-    width: auto;
-}
+#wrap_content, #content2 { background-color: transparent !important; border: none !important; box-shadow: none !important; padding: 10px !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; margin: 0 !important; }
+#wrap_content:before, #wrap_content:after { display: none !important; }
+.link_banner { display: none !important; }
+blockquote { position: relative; background: transparent; border: none; border-left: 4px solid var(--accent-color-light); border-radius: var(--radius-s); box-shadow: none; font-size: 15px; margin: 20px 40px; padding: 15px 20px; color: #666; width: auto; }
 blockquote:before, blockquote:after { display: none !important; }
-
-/* ポップなマーカー */
 .marker { background: linear-gradient(transparent 60%, rgba(102, 255, 102, 0.4) 60%); }
-
-/* 入力フォーム（万人受け） */
-#author, #email, #url, #text {
-    width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 10px; border: 1px solid #ddd; border-radius: var(--radius-s); font-size: 14px; transition: 0.3s; background-color: var(--base-white);
-}
-#author:focus, #email:focus, #url:focus, #text:focus {
-    border-color: var(--accent-color); outline: none; box-shadow: 0 0 5px var(--accent-color_light);
-}
-
-/* ページネーション（モダンUI） */
+#author, #email, #url, #text { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 10px; border: 1px solid #ddd; border-radius: var(--radius-s); font-size: 14px; transition: 0.3s; background-color: var(--base-white); }
+#author:focus, #email:focus, #url:focus, #text:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 5px var(--accent-color-light); }
 .modern-pagination { display: flex; justify-content: center; margin: 40px 0 20px 0; gap: 10px;}
-.modern-pagination a {
-    display: inline-block; padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px; color: #555; font-size: 13px; font-weight: bold; text-decoration: none; background: var(--base-white); transition: all 0.3s ease; box-shadow: var(--card-shadow);
-}
+.modern-pagination a { display: inline-block; padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px; color: #555; font-size: 13px; font-weight: bold; text-decoration: none; background: var(--base-white); transition: all 0.3s ease; box-shadow: var(--card-shadow); }
 .modern-pagination a:hover { background: #333; color: #fff; border-color: #333; }
 .modern-page-prev, .modern-page-next { margin: 0 !important;}
-
-/* いいねボタン丸角化 */
-iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine {
-    border-radius: 30px !important; box-shadow: var(--card-shadow) !important; margin: 20px 0 !important; display: block !important;
-}
-
-/* 続きを読むボタン（万人受け・プロ仕様） */
-a.acontinues {
-    display: inline-block;
-    color: var(--accent-color);
-    background-color: transparent;
-    padding: 8px 18px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 700;
-    border: 2px solid var(--accent-color);
-    border-radius: 30px;
-    margin: 10px 0 20px 0;
-    transition: all 0.3s ease;
-}
+iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine { border-radius: 30px !important; box-shadow: var(--card-shadow) !important; margin: 20px 0 !important; display: block !important; }
+a.acontinues { display: inline-block; color: var(--accent-color); background-color: transparent; padding: 8px 18px; text-decoration: none; font-size: 13px; font-weight: 700; border: 2px solid var(--accent-color); border-radius: 30px; margin: 10px 0 20px 0; transition: all 0.3s ease; }
 a.acontinues:hover { background-color: var(--accent-color); color: #fff; }
-
-/* サイドバー余白调整 */
 #middle { display: flex; max-width: 1000px; margin: 0 auto; overflow: hidden; padding-bottom: 30px;}
 #content { overflow: hidden; position: relative; width: calc(100% - 320px); margin-bottom: 25px; padding: 0 10px; box-sizing: border-box;}
 #navi { float: right; max-width: 300px; margin: 18px 0 30px 0; padding: 20px; border-radius: var(--radius-m); background-color: var(--base-white); box-shadow: var(--card-shadow); box-sizing: border-box;}
@@ -437,42 +316,121 @@ a.acontinues:hover { background-color: var(--accent-color); color: #fff; }
 .sidebody { margin-bottom: 3px; border-bottom: 1px solid #f0f0f0; line-height: 1.4em; padding: 8px 0; font-size: 13px;}
 .powered, .photo, .syndicate { border-bottom: none !important; }
 
-/* =========================================
-   レスポンシブ対応（スマホ調整）
-========================================= */
-/* PCナビ追従用調整 */
-@media screen and (min-width: 769px) { body { margin-top: 80px !important; } }
+/* カテゴリー＆タグ */
+.modern-cat-tag { font-size: 14px; color: #555; margin-top: 15px; padding-bottom: 5px; line-height: 2.0; display: flex; align-items: center; flex-wrap: wrap; }
+.modern-cat-tag a { color: var(--accent-color); text-decoration: none; margin-right: 15px; font-weight: bold; }
+.modern-cat-tag a:hover { text-decoration: underline; }
+.cat-label { display: inline-block; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; margin-right: 10px; font-size: 13px; color: #333; font-weight: bold; }
 
+/* コメントアクションボタン */
+.modern-action-btn { text-align: center; margin: 30px 0; }
+.modern-action-btn a { display: inline-block; background-color: #fff; color: #333; border: 2px solid #333; padding: 12px 30px; border-radius: 30px; font-size: 15px; font-weight: bold; text-decoration: none; transition: all 0.3s ease; }
+.modern-action-btn a:hover { background-color: #333; color: #fff; text-decoration: none; }
+.modern-comment-form { background: #fff; padding: 25px; border: 1px solid #e5e5e5; border-radius: 8px; margin-top: 30px; }
+.modern-comment-form .form-group { margin-bottom: 20px; }
+.modern-comment-form label { display: block; font-size: 14px; font-weight: bold; color: #333; margin-bottom: 8px; }
+.modern-comment-form label .note { font-size: 11px; color: #999; font-weight: normal; margin-left: 5px; }
+.writeB-modern { width: 100%; padding: 15px; background-color: #333; color: #fff; font-size: 16px; font-weight: bold; border: none; border-radius: var(--radius-s); cursor: pointer; transition: 0.3s; }
+.writeB-modern:hover { background-color: #555; }
+
+/* =========================================
+   PC用 追従グローバルナビゲーション（★復元）
+========================================= */
+.pc-global-nav {
+    position: fixed; top: 29px; left: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 10px rgba(0,0,0,0.08); z-index: 9990; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+}
+.pc-nav-inner { max-width: 1000px; margin: 0 auto; }
+.pc-nav-list { display: flex; justify-content: space-around; list-style: none; margin: 0; padding: 0; }
+.pc-nav-list li { margin: 0; padding: 0; width: 20%; }
+.pc-nav-list li a { display: flex; align-items: center; justify-content: center; padding: 15px 0; color: #333; text-decoration: none; font-weight: bold; font-size: 14px; transition: all 0.3s ease; position: relative; }
+.pc-nav-list li a i { margin-right: 8px; color: var(--accent-color); font-size: 16px; transition: transform 0.3s ease; }
+.pc-nav-list li a:hover { color: var(--accent-color); background-color: var(--accent-color-light); }
+.pc-nav-list li a:hover i { transform: translateY(-2px); }
+.pc-nav-list li a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background-color: var(--accent-color); transform: scaleX(0); transition: transform 0.3s ease; }
+.pc-nav-list li a:hover::after { transform: scaleX(1); }
+@media screen and (max-width: 768px) { .pc-global-nav { display: none !important; } }
+
+/* =========================================
+   スマホ用 追従ハンバーガーメニュー（★復元）
+========================================= */
+.hamburger-btn {
+    position: fixed; bottom: 90px; right: 20px; width: 55px; height: 55px; background-color: #333; color: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; z-index: 9998; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s ease;
+}
+.hamburger-btn:hover { background-color: #555; transform: scale(1.05); }
+.menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+.menu-overlay.active { opacity: 1; visibility: visible; }
+.slide-menu { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background-color: #fff; z-index: 10000; transition: all 0.3s ease; box-shadow: -2px 0 10px rgba(0,0,0,0.1); overflow-y: auto; }
+.slide-menu.active { right: 0; }
+.menu-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #f4f4f4; border-bottom: 1px solid #ddd; font-weight: bold; font-size: 16px; }
+.close-btn { font-size: 24px; cursor: pointer; color: #666; }
+.menu-list { list-style: none; padding: 0; margin: 0; }
+.menu-list li { border-bottom: 1px solid #eee; }
+.menu-list li a { display: block; padding: 15px 20px; color: #333; text-decoration: none; font-size: 15px; transition: background 0.3s; }
+.menu-list li a:hover { background-color: #f9f9f9; color: var(--accent-color); }
+.menu-list li a i { width: 25px; text-align: center; margin-right: 10px; color: #999; }
+@media screen and (min-width: 769px) { .hamburger-btn { display: none; } }
+
+/* =========================================
+   LINE風コメント欄デザイン（★復元）
+========================================= */
+.line-chat-box { background-color: var(--accent-color) !important; padding: 25px 15px !important; border-radius: 8px !important; margin-top: 30px !important; box-sizing: border-box !important; }
+.line-chat-box .comments-head { text-align: center !important; color: #fff !important; background-color: transparent !important; padding: 0 0 15px 0 !important; font-size: 14px !important; font-weight: bold !important; letter-spacing: 1px !important; border-bottom: 1px rgba(255,255,255,0.3) solid !important; margin-bottom: 25px !important; }
+.line-comment-wrapper { position: relative !important; margin-bottom: 35px !important; display: block !important; }
+.line-chat-box .comments-post { margin-bottom: 0 !important; border-bottom: none !important; padding-bottom: 0 !important; height: auto !important; min-height: 20px !important; display: block !important; }
+.line-chat-box .comments-prof { width: 36px !important; height: 36px !important; border-radius: 50% !important; object-fit: cover !important; position: absolute !important; display: block !important; top: 0 !important; }
+.line-chat-box .comments-post br { display: none !important; }
+.line-chat-box .comments-body::before { display: none !important; content: none !important; }
+.line-chat-box .comments-author img:not(.comments-prof) { display: none !important; }
+.line-chat-box .comments-author a { background-image: none !important; padding-left: 0 !important; }
+.line-chat-box .line-bubble-user, .line-chat-box .line-bubble-admin { color: #333333 !important; padding: 10px 15px !important; max-width: 65% !important; width: fit-content !important; position: relative !important; display: block !important; box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important; word-break: break-all !important; }
+.line-chat-box .line-bubble-user::after, .line-chat-box .line-bubble-admin::after { display: block !important; content: "" !important; position: absolute !important; top: 0 !important; bottom: auto !important; border-style: solid !important; }
+.line-meta-user .comments-author, .line-meta-admin .comments-author { color: rgba(255, 255, 255, 0.9) !important; font-size: 11px !important; }
+.line-meta-user .comments-author a, .line-meta-admin .comments-author a { color: #ffffff !important; font-weight: bold !important; text-decoration: none !important; }
+.line-meta-user .comment-date, .line-meta-admin .comment-date { margin-left: 6px !important; color: rgba(255, 255, 255, 0.6) !important; }
+.line-chat-box .line-bubble-user { background-color: #8ce353 !important; border-radius: 15px 0 15px 15px !important; margin: 0 50px 5px auto !important; }
+.line-chat-box .line-bubble-user::after { right: -8px !important; border-width: 0 0 10px 10px !important; border-color: transparent transparent transparent #8ce353 !important; }
+.line-meta-user .comments-prof { right: 0 !important; }
+.line-meta-user .comments-author { text-align: right !important; padding-right: 50px !important; }
+.line-chat-box .line-bubble-admin { background-color: #ffffff !important; border-radius: 0 15px 15px 15px !important; margin: 0 auto 5px 50px !important; }
+.line-chat-box .line-bubble-admin::after { left: -8px !important; border-width: 0 10px 10px 0 !important; border-color: transparent #ffffff transparent transparent !important; }
+.line-meta-admin .comments-prof { left: 0 !important; }
+.line-meta-admin .comments-author { text-align: left !important; padding-left: 50px !important; }
+
+/* =========================================
+   記事内 会話型吹き出し機能（★復元）
+========================================= */
+.balloon-box { margin: 20px 0; display: flex; align-items: flex-start; }
+.balloon-icon { width: 60px; text-align: center; font-size: 11px; color: #666; flex-shrink: 0; }
+.balloon-icon img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
+.balloon-text { position: relative; background: #fff; border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-left: 15px; max-width: 70%; color: #333; }
+.balloon-text::before { content: ""; position: absolute; left: -10px; top: 15px; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 10px solid #ccc; }
+.balloon-box.is-right { flex-direction: row-reverse; }
+.balloon-box.is-right .balloon-text { margin-left: 0; margin-right: 15px; border-color: var(--accent-color); }
+.balloon-box.is-right .balloon-text::before { left: auto; right: -10px; border-right: none; border-left: 10px solid var(--accent-color); }
+
+/* =========================================
+   レスポンシブ対応（スマホ幅での微調整）
+========================================= */
 @media screen and (max-width: 768px) {
     /* ピックアップ 2列 */
     .pickup-wrap { gap: 10px; }
     .pickup-item { width: calc(50% - 5px); padding: 18px 5px; border-radius: 10px; }
     .pickup-item i { font-size: 26px; margin-bottom: 8px; }
     .pickup-title { font-size: 12px; }
-
     /* 記事一覧 スマホ調整 */
     #topnews dl { padding: 10px; }
     #topnews dt { margin: 0 10px 0 0 !important; }
     #topnews dd h3 { font-size: 13px !important; line-height: 1.3; }
-    #topnews dl .smanone { display: none !important; } /* 本文非表示 */
-    
-    /* 目次・サイドバー スマホ調整 */
+    #topnews dl .smanone { display: none !important; }
+    /* レイアウト スマホ調整 */
     #middle { display: block; padding-bottom: 20px; }
     #content { width: 100%; float: none; padding: 0 15px; }
     #toc { padding: 15px; width: auto; margin: 20px 0;}
     #toc ol li { font-size: 13px; }
     #navi { width: auto; float: none; margin: 20px 15px; clear: both; }
-    
-    /* SNSボタン幅调整 */
+    /* SNSボタン幅調整 */
     .social-btn li { max-width: calc(33.3% - 6px); flex: auto; min-width: calc(33.3% - 6px);}
 }
-
 @media screen and (max-width: 480px) {
     #header_top { height: auto; }
 }
-
-/* =========================================
-   LINE風コメント欄・会話型吹き出し（前回維持・安全版）
-========================================= */
-/* (ここに前回のLINE風・吹き出し・GitHub読み込み系のCSSが続きます) */
-
