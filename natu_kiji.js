@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
     const settings = window.natuSettings || {};
     
-    // --- トップ画像URLの自動設定 ---
+    // --- トップ画像URLの自動設定（日本語URL対応版） ---
     if (settings.topImage) {
         var headerTop = document.getElementById('header_top');
         if (headerTop) {
-            // CSSの background-image を動的に書き換える
-            headerTop.style.backgroundImage = 'url("' + settings.topImage + '")';
+            // encodeURI() を使って日本語URLの文字化け（エラー）を防ぎます
+            headerTop.style.backgroundImage = 'url("' + encodeURI(settings.topImage) + '")';
         }
     }
 
