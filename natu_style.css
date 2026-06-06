@@ -106,16 +106,7 @@ a.amenu3:hover { background-color: #333; }
 ========================================= */
 #container { text-align: left; margin: 0 2%; width: 96%; }
 #banner, #subbanner { width: 100%; }
-.blogtitle {
-    font-size: 18px;
-    font-weight: bold;
-    padding: 20px 50px 0 0;
-    line-height: 24px;
-    color: #FFF;
-    text-align: right;
-}
-.blogtitle a { color: #FFF; text-decoration: none; }
-.blogtitle a:hover { text-decoration: underline; }
+
 #links { max-width: 300px; overflow: hidden; padding: 10px; }
 #footer { clear: both; padding: 20px 0; width: 100%; height: 50px; }
 #copyright {
@@ -340,22 +331,32 @@ h2 {
     font-size: 16px; padding: 0.4em 0.5em; color: #494949; background: #f4f4f4; border-left: solid 5px #7db4e6; border-bottom: solid 3px #d7d7d7;
 }
 
-/* サイトトップ設定 */
+/* =========================================
+   サイトトップ設定 ＋ タイトル＆キャッチフレーズ設定
+========================================= */
 #top { background-repeat: no-repeat; background-position: center top; }
+
 #header_top {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
-    position: relative;
+    position: relative;
     background-image: none;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
     
     /* PC・スマホ両対応の「可変する高さ」設定 */
-    height: 30vw; /* 画面幅の30%の高さにする */
-    min-height: 180px; /* スマホでの最低の高さ */
-    max-height: 350px; /* PCでの最大の高さ */
+    height: 30vw;
+    min-height: 180px;
+    max-height: 350px; 
+
+    /* ★文字をヘッダー画像の「ど真ん中」に美しく配置するための追加設定 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 /* ヘッダー内部のコンテナ（文字などを包む要素） */
@@ -363,10 +364,39 @@ h2 {
     max-width: 1000px;
     margin: 0 auto;
     position: relative;
-    
-    /* ★重要：固定の 200px を廃止し、親（画像）の高さに100%自動で合わせる */
     height: 100% !important; 
 }
+
+/* ▼ タイトル（BlogTitle）のデザイン ▼ */
+.blogtitle {
+    margin: 0;
+    padding: 0 15px;
+}
+.blogtitle a {
+    /* 万人受けする、美しく読みやすいフォント指定 */
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: clamp(24px, 5vw, 42px); 
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    /* どんな背景画像が来ても絶対に文字が読めるようにする「多重影」 */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.6), 0px 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* ▼ キャッチフレーズ（BlogDescription）のデザイン ▼ */
+#description {
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    color: #f8f9fa;
+    font-weight: normal;
+    font-size: clamp(12px, 2vw, 16px); 
+    margin-top: 10px;
+    padding: 0 20px;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+    text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
 #middle { display: flex; max-width: 1000px; margin: 0 auto; overflow: hidden; }
 #top_ap1 { position: absolute; width: 184px; height: 72px; z-index: 1; left: 7px; top: 7px; }
 #navi {
@@ -423,7 +453,6 @@ h2 {
 #content2 {
     flex: 1; float: left; background-color: #FFF; width: calc(100% - 320px); box-sizing: border-box; margin: 18px 0 10px 0; padding: 10px; border-radius: 10px;
 }
-#description { font-size: 14px; color: #FFF; text-align: right; margin: 0 50px 10px 0; }
 .powerd a { position: absolute; top: 375px; right: 5px; font-size: 11px; color: #FFF; text-decoration: none; }
 .powerd a:hover { text-decoration: underline; }
 .link_banner { margin: 20px 0; }
@@ -526,8 +555,9 @@ img, video, object { max-width: 100%; height: auto; }
 
 @media screen and (max-width: 480px) {
     #header_top { height: auto; }
-    .blogtitle { font-size: 16px; padding: 15px 40px 0 0; }
-    #description { font-size: 12px; padding-bottom: 10px; }
+    
+    /* 以前あった blogtitle と description の不要な上書きは削除しています */
+    
     #middle { display: block; max-width: 100%; min-width: initial; }
     #content2 { margin: 0; width: 100%; float: none; }
     #topnews dl { height: 90px; }
@@ -774,7 +804,7 @@ iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine {
     object-fit: cover !important;
     position: absolute !important;
     display: block !important;
-    top: 0 !important; /* ★常に箱のトップ（しっぽと同じ高さ）に張り付くように変更 */
+    top: 0 !important; 
 }
 
 
@@ -789,7 +819,7 @@ iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine {
     content: none !important;
 }
 
-/* ★ナチュログが自動挿入する謎の絵文字・アイコンを非表示化 */
+/* ナチュログが自動挿入する謎の絵文字・アイコンを非表示化 */
 .line-chat-box .comments-author img:not(.comments-prof) {
     display: none !important;
 }
@@ -872,14 +902,14 @@ iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine {
    管理者用（左側配置・白色）
 ----------------------------------------- */
 .line-chat-box .line-bubble-admin {
-    background-color: #ffffff !important; /* ★吹き出しの色：白に変更 */
+    background-color: #ffffff !important; /* 吹き出しの色：白に変更 */
     border-radius: 0 15px 15px 15px !important; /* 左上が尖る形 */
     margin: 0 auto 5px 50px !important; /* 左側にアイコン用余白 */
 }
 .line-chat-box .line-bubble-admin::after {
     left: -8px !important;
     border-width: 0 10px 10px 0 !important; /* 左上の三角形 */
-    border-color: transparent #ffffff transparent transparent !important; /* ★しっぽの色：白に変更 */
+    border-color: transparent #ffffff transparent transparent !important; /* しっぽの色：白に変更 */
 }
 .line-meta-admin .comments-prof {
     left: 0 !important;
@@ -888,7 +918,6 @@ iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine {
     text-align: left !important;
     padding-left: 50px !important;
 }
-
 
 /* =========================================
    記事内 会話型吹き出し機能（自動生成用）
@@ -958,4 +987,3 @@ iframe[src*="iine"], div[id*="iine"], .iine_btn, .admin-iine {
     height: 100%;
     z-index: 5;
 }
-
