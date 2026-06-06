@@ -1,19 +1,22 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // ユーザー設定の取得（設定がない場合の安全対策含む）
-    const categories = window.natuSettings || {};
+    // ユーザー設定の取得（変数名を 'settings' に統一しました！）
+    const settings = window.natuSettings || {};
     
-    // --- トップ画像URLの自動設定 ---
+    // --- トップ画像URLの自動設定（日本語URL対応版） ---
     if (settings.topImage) {
         var headerTop = document.getElementById('header_top');
         if (headerTop) {
-            // CSSの background-image を動的に書き換える
-            headerTop.style.backgroundImage = 'url("' + settings.topImage + '")';
+            // encodeURI() を使って日本語URLの文字化け（エラー）を防ぎます
+            headerTop.style.backgroundImage = 'url("' + encodeURI(settings.topImage) + '")';
         }
     }
 
     // cate1 〜 cate4 までをループ処理
-    for (let id in categories) {
-        let url = categories[id];
+    for (let id in settings) {
+        // もし設定項目が 'cate' から始まらないもの（topImageなど）だったらスキップする安全対策
+        if (!id.startsWith('cate')) continue;
+
+        let url = settings[id];
         
         // URLが空欄の場合は処理をスキップ
         if (!url) continue;
