@@ -1,29 +1,36 @@
 document.addEventListener("DOMContentLoaded", function() {
     const settings = window.natuSettings || {};
     
-    // --- トップ画像URLの自動設定（日本語URL対応版） ---
+    // --- 1. トップ画像URLの自動設定 ---
     if (settings.topImage) {
         var headerTop = document.getElementById('header_top');
         if (headerTop) {
-            // encodeURI() を使って日本語URLの文字化け（エラー）を防ぎます
             headerTop.style.backgroundImage = 'url("' + encodeURI(settings.topImage) + '")';
         }
     }
 
+    // --- 2. メニュー・ピックアップの自動設定（名前とURL） ---
     for (let id in settings) {
         if (!id.startsWith('cate')) continue;
-        let url = settings[id];
-        if (!url) continue;
+        
+        let data = settings[id];
+        if (!data || !data.url) continue;
+
+        let linkElements = document.querySelectorAll('.set-' + id);
+        linkElements.forEach(function(el) {
+            el.href = data.url;
+        });
+
+        let nameElements = document.querySelectorAll('.name-' + id);
+        nameElements.forEach(function(el) {
+            el.textContent = data.name;
+        });
 
         let elById = document.getElementById(id);
-        if (elById) elById.href = url;
-        
-        let classElements = document.querySelectorAll('.set-' + id);
-        classElements.forEach(function(el) {
-            el.href = url;
-        });
+        if (elById) elById.href = data.url;
     }
     
+    // --- 3. ハンバーガーメニューの開閉処理 ---
     var hamBtn = document.getElementById('hamburger-btn');
     var clsBtn = document.getElementById('close-btn');
     var slideMenu = document.getElementById('slide-menu');
@@ -38,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
         menuOverlay.addEventListener('click', toggleMenu);
     }
 
+    // コメント欄の開閉
     var commentBtn = document.getElementById('toggle-comment-btn');
     var commentBox = document.getElementById('js-comment-accordion-box');
     if (commentBtn && commentBox) {
@@ -51,7 +59,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-
 // ==========================================
 // jQuery必須の個別記事専用処理
 // ==========================================
@@ -59,12 +66,11 @@ if (typeof jQuery !== 'undefined') {
     jQuery(function($) {
         const settings = window.natuSettings || {};
         
-        // --- 1. 目次データの生成（移動はせず、データだけ作る） ---
+        // --- 1. 目次データの生成 ---
         var idcount = 1;
         var tocList = '';
         var currentlevel = 0;
         
-        // H2とH3にIDを付与しながらリストを作成
         $("article h2, article h3").each(function() {
             this.id = "toc-" + idcount;
             idcount++;
@@ -75,50 +81,43 @@ if (typeof jQuery !== 'undefined') {
         });
         while (currentlevel > 0) { tocList += "</ol>"; currentlevel--; }
 
-        // 目次のHTMLブロックを準備
         var tocHtml = '';
         if (tocList !== '') {
             tocHtml = '<div id="toc"><div class="mokuji">目次</div>' + tocList + '</div>';
         }
-        
-        // テンプレートの一番上にある「元々の空の目次箱」を完全に消去する
         $("#toc").remove();
 
-        // --- 2. はてなブログカード化 ＆ カテゴリータグ付与 ＆ ★目次の直接埋め込み ---
+        // --- 2. はてなブログカード化 ＆ カテゴリー ＆ 目次埋め込み ---
         var isTocInserted = false;
         var isCategoryAdded = false;
 
         $('.main').each(function(){
             var html = $(this).html();
             
-            // ブログカード化
+            // ブログカード
             html = html.replace(/(<[^>]+>)|(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, function(match, tag, url) {
                 if (tag) return tag;
                 return '<iframe class="hatenablogcard" style="width:100%;height:155px;max-width:680px;" src="https://hatenablog-parts.com/embed?url=' + url + '" frameborder="0" scrolling="no"></iframe>';
             });
             
-            // ★最強の目次挿入ロジック：HTML文字列の中で最初のH2を探し、その直前に目次をねじ込む
+            // 目次挿入
             if (tocHtml !== '' && !isTocInserted) {
-                // H2タグ（属性付き・大文字小文字問わず）があるかチェック
                 if (/(<h2[^>]*>)/i.test(html)) {
-                    // 最初のH2の直前に目次のHTMLを挿入
                     html = html.replace(/(<h2[^>]*>)/i, "\n" + tocHtml + "\n$1");
                     isTocInserted = true;
                 }
             }
             
-            // カテゴリータグ処理
+            // カテゴリータグ
             if (settings.hasCategory) {
                 var categoryHtml = '<div class="modern-cat-tag"><span class="cat-label"><i class="fas fa-folder"></i> カテゴリー</span> <a href="' + settings.categoryUrl + '">' + settings.categoryName + '</a></div>';
-                var tagRegex = /タグ[ 　]*[:：]/; 
+                var tagRegex = /タグ[  ]*[:：]/; 
                 if (tagRegex.test(html)) {
                     html = html.replace(tagRegex, categoryHtml + '<div class="modern-cat-tag"><span class="cat-label"><i class="fas fa-tags"></i> タグ</span> ');
                     html += '</div>';
                     isCategoryAdded = true;
                 }
             }
-            
-            // 書き換えたHTMLを画面に戻す
             $(this).html(html);
         });
         
