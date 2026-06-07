@@ -90,8 +90,68 @@ article h2, .main dt { font-size: clamp(18px, 3vw, 22px); color: var(--text-colo
 article h3 { font-size: clamp(16px, 2.5vw, 19px); color: var(--text-color); padding: 0.4em 0 0.4em 0.8em; margin: 1.5em 0 1em 0; font-weight: 700; border-left: 3px solid var(--accent-color); }
 .sidetitle { font-size: 16px; font-weight: 700; color: var(--text-color); background: transparent; border-bottom: 2px solid var(--accent-color); margin-bottom: 15px; padding: 0 0 8px 0; letter-spacing: 0.1em; position: relative; }
 .sidetitle::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 30%; height: 2px; background-color: var(--accent-color); }
-.sidebody { margin-bottom: 3px; border-bottom: 1px solid #f0f0f0; line-height: 1.5; letter-spacing: 0.05em; padding: 8px 0; font-size: 13px;}
-.powered, .photo, .syndicate { border-bottom: none !important; }
+
+/* =========================================
+   記事内の画像（プロ仕様・JIN風）
+========================================= */
+.main img {
+    border-radius: 8px; /* ほんのり角丸 */
+    box-shadow: var(--card-shadow); /* 上品な影で浮き上がらせる */
+    margin: 20px 0;
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* =========================================
+   サイドバーウィジェット（プロ仕様・STORK風）
+========================================= */
+.sidebody {
+    margin-bottom: 0;
+    border-bottom: 1px dashed #e5e5e5; /* 優しい点線 */
+    line-height: 1.5;
+    padding: 12px 0;
+    font-size: 13px;
+}
+.sidebody:last-child { border-bottom: none; }
+.sidebody a {
+    color: var(--text-color);
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s var(--ease-out);
+}
+.sidebody a:hover {
+    color: var(--accent-color);
+    transform: translateX(5px); /* ホバーでスッと右にスライドするアクション */
+}
+.powered, .photo, .syndicate { border-bottom: none !important; padding: 10px 0; text-align: center; }
+
+/* プロフィール（JIN風） */
+.photo img {
+    border-radius: 50%; /* アイコンを綺麗なまん丸に */
+    box-shadow: var(--card-shadow);
+    max-width: 120px;
+    height: auto;
+    border: 3px solid var(--base-white);
+    margin: 0 auto;
+}
+.nickname {
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: 700;
+    margin: 15px 0 10px 0;
+    text-align: center;
+}
+.message {
+    font-size: 13px;
+    color: #555;
+    padding: 18px;
+    background: #f9f9f9;
+    border: none;
+    border-radius: var(--radius-m); /* 丸みを帯びた背景ボックス */
+    line-height: 1.6;
+    text-align: left;
+}
 
 /* =========================================
    ブログカード（記事一覧）デザイン
