@@ -1,42 +1,52 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // ユーザー設定の取得（変数名を 'settings' に統一しました！）
     const settings = window.natuSettings || {};
     
-    // --- トップ画像URLの自動設定（日本語URL対応版） ---
+    // --- 1. トップ画像URLの自動設定 ---
     if (settings.topImage) {
         var headerTop = document.getElementById('header_top');
         if (headerTop) {
-            // encodeURI() を使って日本語URLの文字化け（エラー）を防ぎます
             headerTop.style.backgroundImage = 'url("' + encodeURI(settings.topImage) + '")';
         }
     }
 
-    // cate1 〜 cate4 までをループ処理
+    // --- 2. メニュー・ピックアップの自動設定（名前とURL） ---
     for (let id in settings) {
-        // もし設定項目が 'cate' から始まらないもの（topImageなど）だったらスキップする安全対策
         if (!id.startsWith('cate')) continue;
-
-        let url = settings[id];
         
-        // URLが空欄の場合は処理をスキップ
-        if (!url) continue;
+        // 新しい {url: "...", name: "..."} の形式を読み取る
+        let data = settings[id];
+        if (!data || !data.url) continue;
 
-        // 【1】IDで指定された要素（念のための互換性維持）
-        let elById = document.getElementById(id);
-        if (elById) {
-            elById.href = url;
-        }
-        
-        // 【2】クラスで指定された複数の要素（PCナビ・スマホナビ・ピックアップ全てを一括変更）
-        let classElements = document.querySelectorAll('.set-' + id);
-        classElements.forEach(function(el) {
-            el.href = url;
+        // URLの書き換え（PCナビ、スマホナビ、ピックアップ等）
+        let linkElements = document.querySelectorAll('.set-' + id);
+        linkElements.forEach(function(el) {
+            el.href = data.url;
         });
+
+        // 名前の書き換え（PCナビ、スマホナビ、ピックアップ等）
+        let nameElements = document.querySelectorAll('.name-' + id);
+        nameElements.forEach(function(el) {
+            el.textContent = data.name;
+        });
+
+        // 念のための互換性維持（ID指定用）
+        let elById = document.getElementById(id);
+        if (elById) elById.href = data.url;
     }
     
-    // ハンバーガーメニューの開閉処理
-    $('#hamburger-btn, #close-btn, #menu-overlay').on('click', function() {
-        $('#slide-menu').toggleClass('active');
-        $('#menu-overlay').toggleClass('active');
-    });
+    // --- 3. ハンバーガーメニューの開閉処理 ---
+    var hamBtn = document.getElementById('hamburger-btn');
+    var clsBtn = document.getElementById('close-btn');
+    var slideMenu = document.getElementById('slide-menu');
+    var menuOverlay = document.getElementById('menu-overlay');
+    
+    if(hamBtn && clsBtn && slideMenu && menuOverlay) {
+        var toggleMenu = function() {
+            slideMenu.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+        };
+        hamBtn.addEventListener('click', toggleMenu);
+        clsBtn.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', toggleMenu);
+    }
 });
